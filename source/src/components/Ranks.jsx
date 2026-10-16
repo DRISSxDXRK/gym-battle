@@ -5,7 +5,7 @@ import { RATING_TIERS, tierFor } from '../lib/ratings.js'
 import { userOverall, headToHead, byUser, weightAt, sessionScoreOf } from '../lib/stats.js'
 import { Card, TierBadge, LineChart, Ladder } from './ui.jsx'
 
-const P_COLORS = ['#ff2e63', '#3da9ff']
+const P_COLORS = ['#679436', '#427AA1']
 
 function shortDate(iso) {
   const d = new Date(iso + 'T12:00:00')

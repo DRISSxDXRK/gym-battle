@@ -61,16 +61,25 @@ export default function Onboarding({ onDone, saving }) {
     <div className="onboard">
       <div className="hero">
         <div className="big">🥊</div>
-        <h2>Gym Battle</h2>
-        <p>Two lifters. One winner. Weekly ELO battles, strength ranks, session MVPs.</p>
+        <div className="kicker">1v1 strength competition</div>
+        <h2>Gym <span className="hl">Battle</span></h2>
+        <p className="tagline">Two lifters. One winner. Weekly ELO battles, strength ranks, session MVPs.</p>
+        <div className="marquee" aria-hidden="true">
+          <div className="marquee-track">
+            {Array.from({ length: 6 }).map((_, i) => <span key={i}>weekly battle · train hard · no excuses · 1200 elo · </span>)}
+            {Array.from({ length: 6 }).map((_, i) => <span key={'b' + i}>weekly battle · train hard · no excuses · 1200 elo · </span>)}
+          </div>
+        </div>
       </div>
-      <PersonForm title="Fighter 1" color="#ff2e63" value={a} onChange={setA} />
-      <PersonForm title="Fighter 2" color="#3da9ff" value={b} onChange={setB} />
+      <div className="onboard-form">
+      <PersonForm title="Fighter 1" color="#A5BE00" value={a} onChange={setA} />
+      <PersonForm title="Fighter 2" color="#427AA1" value={b} onChange={setB} />
       {err && <div className="warn" style={{ marginBottom: 12 }}>{err}</div>}
       <button className="btn" onClick={submit} disabled={saving}>{saving ? 'Setting up…' : 'Start the battle ⚔️'}</button>
-      <p style={{ color: 'var(--muted)', fontSize: 12, textAlign: 'center', marginTop: 12 }}>
+      <p className="fine">
         Both start at 1200 ELO. Battles run Monday–Sunday.
       </p>
+      </div>
     </div>
   )
 }

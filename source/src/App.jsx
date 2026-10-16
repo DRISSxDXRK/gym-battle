@@ -22,7 +22,7 @@ export default function App() {
   if (loading) {
     return (
       <div className="onboard">
-        <div className="hero"><div className="big">🏋️</div><p>Loading the arena…</p></div>
+        <div className="hero"><div className="big">🏋️</div><h2>Loading</h2><p className="tagline">Warming up the arena…</p></div>
       </div>
     )
   }
@@ -30,8 +30,10 @@ export default function App() {
   if (error) {
     return (
       <div className="onboard">
-        <div className="hero"><div className="big">🚨</div><h2>Couldn't load data</h2><p>{error}</p></div>
-        <button className="btn" onClick={() => window.location.reload()}>Retry</button>
+        <div className="hero"><div className="big">🚨</div><h2>No connection</h2><p className="tagline">{error}</p></div>
+        <div className="onboard-form">
+          <button className="btn" onClick={() => window.location.reload()}>Retry</button>
+        </div>
       </div>
     )
   }
@@ -57,11 +59,8 @@ export default function App() {
   return (
     <>
       <header className="app-header">
-        <h1>GYM <span className="vs">BATTLE</span></h1>
-        <div className="sub">
-          {profiles.map((p) => p.name).join(' vs ') || '1v1 strength competition'}
-          {DATA_MODE === 'demo' ? ' · demo data' : ' · live'}
-        </div>
+        <h1>Gym <span className="vs">Battle</span></h1>
+        <div className="live-badge"><span className="dot" />{DATA_MODE === 'demo' ? 'demo' : 'live'}</div>
       </header>
       {DATA_MODE === 'demo' && (
         <div className="demo-banner">

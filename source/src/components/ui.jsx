@@ -12,8 +12,8 @@ export function TierBadge({ tier, rating }) {
 export function Card({ title, emoji, children, action }) {
   return (
     <div className="card">
-      <h3 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span>{emoji && <span className="emoji">{emoji}</span>}{title}</span>
+      <h3>
+        <span>{title}</span>
         {action}
       </h3>
       {children}
@@ -22,9 +22,10 @@ export function Card({ title, emoji, children, action }) {
 }
 
 // Simple SVG line chart. series: [{ color, dashed?, points: [{x: label, y}] }]
-// yLabel formats the y axis values.
+// yLabel formats the y axis values. Styled for light cards.
 export function LineChart({ series, height = 180, yLabel = (v) => v, goalLine = null }) {
   const W = 340, H = height, PAD = { l: 34, r: 8, t: 10, b: 22 }
+  const GRID = '#d5e2ec', AXIS = '#5d7684'
   const allY = []
   series.forEach((s) => s.points.forEach((p) => allY.push(p.y)))
   if (goalLine != null) allY.push(goalLine)
@@ -41,14 +42,14 @@ export function LineChart({ series, height = 180, yLabel = (v) => v, goalLine = 
       <svg viewBox={`0 0 ${W} ${H}`}>
         {tickVals.map((t, i) => (
           <g key={i}>
-            <line x1={PAD.l} x2={W - PAD.r} y1={Y(t)} y2={Y(t)} stroke="#262c3a" strokeWidth="1" />
-            <text x={PAD.l - 4} y={Y(t) + 3.5} textAnchor="end" fontSize="9" fill="#8b93a7">{yLabel(t)}</text>
+            <line x1={PAD.l} x2={W - PAD.r} y1={Y(t)} y2={Y(t)} stroke={GRID} strokeWidth="1" />
+            <text x={PAD.l - 4} y={Y(t) + 3.5} textAnchor="end" fontSize="9" fill={AXIS}>{yLabel(t)}</text>
           </g>
         ))}
         {goalLine != null && (
           <g>
-            <line x1={PAD.l} x2={W - PAD.r} y1={Y(goalLine)} y2={Y(goalLine)} stroke="#ffd34d" strokeWidth="1.5" strokeDasharray="5 4" />
-            <text x={W - PAD.r} y={Y(goalLine) - 4} textAnchor="end" fontSize="9" fill="#ffd34d">goal {goalLine}</text>
+            <line x1={PAD.l} x2={W - PAD.r} y1={Y(goalLine)} y2={Y(goalLine)} stroke="#e8a100" strokeWidth="1.5" strokeDasharray="5 4" />
+            <text x={W - PAD.r} y={Y(goalLine) - 4} textAnchor="end" fontSize="9" fill="#e8a100">goal {goalLine}</text>
           </g>
         )}
         {series.map((s, si) => (
@@ -66,7 +67,7 @@ export function LineChart({ series, height = 180, yLabel = (v) => v, goalLine = 
         {series[0] && series[0].points.map((p, i) => {
           const n = series[0].points.length
           if (n > 6 && i % Math.ceil(n / 5) !== 0 && i !== n - 1) return null
-          return <text key={i} x={X(i, n)} y={H - 6} textAnchor="middle" fontSize="8.5" fill="#8b93a7">{p.x}</text>
+          return <text key={i} x={X(i, n)} y={H - 6} textAnchor="middle" fontSize="8.5" fill={AXIS}>{p.x}</text>
         })}
       </svg>
     </div>

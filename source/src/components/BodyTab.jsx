@@ -4,7 +4,7 @@ import { todayISO, fmtDate } from '../lib/ratings.js'
 import { byUser, latestWeight } from '../lib/stats.js'
 import { Card, LineChart } from './ui.jsx'
 
-const P_COLORS = ['#ff2e63', '#3da9ff']
+const P_COLORS = ['#679436', '#427AA1']
 
 function shortDate(iso) {
   const d = new Date(iso + 'T12:00:00')
@@ -92,7 +92,7 @@ export default function BodyTab({ profiles, bodyweight, calories, actions }) {
           {profiles.map((p, i) => (
             <span key={p.id}><span className="sw" style={{ background: P_COLORS[i % 2] }} />{p.name}</span>
           ))}
-          {goalLine && <span><span className="sw" style={{ background: '#ffd34d' }} />{profiles[0].name} goal</span>}
+          {goalLine && <span><span className="sw" style={{ background: '#e8a100' }} />{profiles[0].name} goal</span>}
         </div>
         <div className="row2" style={{ marginTop: 12 }}>
           <div className="field" style={{ margin: 0 }}>
