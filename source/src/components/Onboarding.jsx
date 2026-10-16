@@ -28,23 +28,17 @@ function PersonForm({ title, color, value, onChange }) {
           <input type="number" inputMode="decimal" value={value.goal_weight} onChange={(e) => set('goal_weight', e.target.value)} placeholder="70" />
         </div>
       </div>
-      <div className="row2">
-        <div className="field">
-          <label>Current weight (kg)</label>
-          <input type="number" inputMode="decimal" value={value.start_weight} onChange={(e) => set('start_weight', e.target.value)} placeholder="61" />
-        </div>
-        <div className="field">
-          <label>Daily calories target</label>
-          <input type="number" inputMode="numeric" value={value.calorie_target} onChange={(e) => set('calorie_target', e.target.value)} placeholder="3200" />
-        </div>
+      <div className="field">
+        <label>Current weight (kg)</label>
+        <input type="number" inputMode="decimal" value={value.start_weight} onChange={(e) => set('start_weight', e.target.value)} placeholder="61" />
       </div>
     </div>
   )
 }
 
 export default function Onboarding({ onDone, saving }) {
-  const [a, setA] = useState({ name: 'Driss', goal: 'gain', goal_weight: '70', start_weight: '61', calorie_target: '3200' })
-  const [b, setB] = useState({ name: 'Younes', goal: 'gain', goal_weight: '', start_weight: '', calorie_target: '3000' })
+  const [a, setA] = useState({ name: 'Driss', goal: 'gain', goal_weight: '70', start_weight: '61' })
+  const [b, setB] = useState({ name: 'Younes', goal: 'gain', goal_weight: '', start_weight: '' })
   const [err, setErr] = useState('')
 
   const submit = () => {
@@ -52,8 +46,8 @@ export default function Onboarding({ onDone, saving }) {
     if (a.name.trim().toLowerCase() === b.name.trim().toLowerCase()) { setErr('Names must be different.'); return }
     setErr('')
     onDone([
-      { name: a.name.trim(), goal: a.goal, goal_weight: Number(a.goal_weight) || null, start_weight: Number(a.start_weight) || null, calorie_target: Number(a.calorie_target) || null },
-      { name: b.name.trim(), goal: b.goal, goal_weight: Number(b.goal_weight) || null, start_weight: Number(b.start_weight) || null, calorie_target: Number(b.calorie_target) || null },
+      { name: a.name.trim(), goal: a.goal, goal_weight: Number(a.goal_weight) || null, start_weight: Number(a.start_weight) || null },
+      { name: b.name.trim(), goal: b.goal, goal_weight: Number(b.goal_weight) || null, start_weight: Number(b.start_weight) || null },
     ])
   }
 

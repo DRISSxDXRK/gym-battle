@@ -17,7 +17,7 @@ export default function App() {
   const [tab, setTab] = useState('battle')
   const [saving, setSaving] = useState(false)
   const gym = useGymData()
-  const { profiles, sessions, bodyweight, calories, eloHistory, actions, loading, error } = gym
+  const { profiles, sessions, bodyweight, eloHistory, actions, loading, error } = gym
 
   if (loading) {
     return (
@@ -77,13 +77,13 @@ export default function App() {
       )}
 
       {tab === 'battle' && (
-        <Battle profiles={profiles} sessions={sessions} bodyweight={bodyweight} calories={calories} eloHistory={eloHistory} actions={actions} />
+        <Battle profiles={profiles} sessions={sessions} bodyweight={bodyweight} eloHistory={eloHistory} actions={actions} />
       )}
       {tab === 'log' && (
         <Logger profiles={profiles} saving={saving} onSave={(payload) => wrap(() => actions.logSession(payload))} />
       )}
       {tab === 'body' && (
-        <BodyTab profiles={profiles} bodyweight={bodyweight} calories={calories} actions={actions} />
+        <BodyTab profiles={profiles} bodyweight={bodyweight} actions={actions} />
       )}
       {tab === 'ranks' && (
         <Ranks profiles={profiles} sessions={sessions} bodyweight={bodyweight} eloHistory={eloHistory} />

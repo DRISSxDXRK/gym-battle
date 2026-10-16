@@ -36,12 +36,12 @@ export function buildDemoData() {
   const today = todayISO()
   const driss = {
     id: uid(), name: 'Driss', elo: 1199,
-    goal: 'gain', goal_weight: 70, calorie_target: 3200,
+    goal: 'gain', goal_weight: 70,
     start_weight: 61, created_at: today,
   }
   const younes = {
     id: uid(), name: 'Younes', elo: 1201,
-    goal: 'gain', goal_weight: 80, calorie_target: 3000,
+    goal: 'gain', goal_weight: 80,
     start_weight: 74.5, created_at: today,
   }
   const D = driss.id, Y = younes.id
@@ -117,15 +117,6 @@ export function buildDemoData() {
     { id: uid(), user_id: Y, date: today, weight_kg: 75.0 },
   ]
 
-  const calories = [
-    { id: uid(), user_id: D, date: isoOffset(-2), calories: 3250, target: 3200 },
-    { id: uid(), user_id: D, date: isoOffset(-1), calories: 2900, target: 3200 },
-    { id: uid(), user_id: D, date: today, calories: 3100, target: 3200 },
-    { id: uid(), user_id: Y, date: isoOffset(-2), calories: 3050, target: 3000 },
-    { id: uid(), user_id: Y, date: isoOffset(-1), calories: 3100, target: 3000 },
-    { id: uid(), user_id: Y, date: today, calories: 2800, target: 3000 },
-  ]
-
   const w1 = mondayOf(isoOffset(-14))
   const w2 = mondayOf(isoOffset(-7))
   const eloHistory = [
@@ -135,5 +126,5 @@ export function buildDemoData() {
     { id: uid(), user_id: Y, week_start: w2, elo_before: 1184, elo_after: 1201, week_points: 512 },
   ]
 
-  return { profiles: [driss, younes], sessions, bodyweight, calories, eloHistory }
+  return { profiles: [driss, younes], sessions, bodyweight, eloHistory }
 }

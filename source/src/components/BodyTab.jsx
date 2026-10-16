@@ -1,6 +1,6 @@
-// Body tab: bodyweight chart per user + daily calorie logging.
+// Body tab: bodyweight chart per user + weight logging.
 import { useState, useMemo } from 'react'
-import { todayISO, fmtDate } from '../lib/ratings.js'
+import { todayISO } from '../lib/ratings.js'
 import { byUser, latestWeight } from '../lib/stats.js'
 import { Card, LineChart } from './ui.jsx'
 
@@ -11,12 +11,10 @@ function shortDate(iso) {
   return `${d.getDate()}/${d.getMonth() + 1}`
 }
 
-export default function BodyTab({ profiles, bodyweight, calories, actions }) {
+export default function BodyTab({ profiles, bodyweight, actions }) {
   const [userIdx, setUserIdx] = useState(0)
   const [bwDate, setBwDate] = useState(todayISO())
   const [bwVal, setBwVal] = useState('')
-  const [calDate, setCalDate] = useState(todayISO())
-  const [calVal, setCalVal] = useState('')
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState('')
 
@@ -34,11 +32,6 @@ export default function BodyTab({ profiles, bodyweight, calories, actions }) {
     })).filter((s) => s.points.length > 0)
   }, [profiles, bodyweight])
 
-  const calRows = useMemo(() => {
-    if (!user) return []
-    return byUser(calories, user.id).sort((a, b) => (a.date < b.date ? 1 : -1)).slice(-10).reverse()
-  }, [calories, user])
-
   const saveBw = async () => {
     if (!user || !bwVal) return
     setSaving(true); setMsg('')
@@ -46,16 +39,6 @@ export default function BodyTab({ profiles, bodyweight, calories, actions }) {
       await actions.logBodyweight(user.id, bwDate, bwVal)
       setBwVal('')
       setMsg('✅ Weight logged')
-    } catch (e) { setMsg('Error: ' + e.message) } finally { setSaving(false) }
-  }
-
-  const saveCal = async () => {
-    if (!user || !calVal) return
-    setSaving(true); setMsg('')
-    try {
-      await actions.logCalories(user.id, calDate, calVal)
-      setCalVal('')
-      setMsg('✅ Calories logged')
     } catch (e) { setMsg('Error: ' + e.message) } finally { setSaving(false) }
   }
 
@@ -109,37 +92,6 @@ export default function BodyTab({ profiles, bodyweight, calories, actions }) {
         </button>
       </Card>
 
-      <Card title={`Calories — ${user ? user.name : ''} (target ${user?.calorie_target || '—'})`} emoji="🍗">
-        <div className="row2">
-          <div className="field" style={{ margin: 0 }}>
-            <label>Date</label>
-            <input type="date" value={calDate} max={todayISO()} onChange={(e) => setCalDate(e.target.value)} />
-          </div>
-          <div className="field" style={{ margin: 0 }}>
-            <label>Calories</label>
-            <input type="number" inputMode="numeric" placeholder="3200" value={calVal} onChange={(e) => setCalVal(e.target.value)} />
-          </div>
-        </div>
-        <button className="btn small" style={{ marginTop: 10 }} disabled={saving || !calVal} onClick={saveCal}>
-          {saving ? 'Saving…' : 'Log calories'}
-        </button>
-        <div style={{ marginTop: 12 }}>
-          {calRows.map((r) => {
-            const hit = r.target > 0 && r.calories >= r.target
-            return (
-              <div className="feed-item" key={r.id}>
-                <span className="fi-ico">{hit ? '✅' : '❌'}</span>
-                <div className="fi-body">
-                  <div className="fi-title">{fmtDate(r.date)}</div>
-                  <div className="fi-sub">target {r.target}</div>
-                </div>
-                <span className="fi-score" style={{ color: hit ? 'var(--good)' : 'var(--bad)' }}>{r.calories}</span>
-              </div>
-            )
-          })}
-          {calRows.length === 0 && <div className="empty">No calorie logs yet.</div>}
-        </div>
-      </Card>
       {msg && <div className="notice">{msg}</div>}
     </div>
   )

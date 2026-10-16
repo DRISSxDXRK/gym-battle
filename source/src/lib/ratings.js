@@ -76,10 +76,9 @@ export function inWeek(dateStr, weekStart) {
 
 // ---- Weekly battle points ----
 // points = 100/session + 1 per 100kg volume + 50 per PR (per exercise, first of week)
-//        + 25 per day calories >= target + 100 if week-end weight moved toward goal
+//        + 100 if week-end weight moved toward goal
 export function weekPoints({
   sessions,      // [{ date, sets:[{weight_kg,reps}], prs:[exercise...] }]
-  calorieDays,   // [{ date, calories, target }]
   weekStart,     // monday date string
   bwStart,       // number|null (week-start weight)
   bwEnd,         // number|null (week-end weight)
@@ -94,13 +93,6 @@ export function weekPoints({
     for (const ex of (s.prs || [])) {
       if (!prExercises.has(ex)) { prExercises.add(ex); pts += 50 }
     }
-  }
-  const seenDays = new Set()
-  for (const d of calorieDays) {
-    if (!inWeek(d.date, weekStart)) continue
-    if (seenDays.has(d.date)) continue
-    seenDays.add(d.date)
-    if (d.target > 0 && d.calories >= d.target) pts += 25
   }
   if (bwStart != null && bwEnd != null) {
     const toward =

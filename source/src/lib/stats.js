@@ -80,7 +80,7 @@ export function recentPRs(sessions, bodyweight, profile, days = 30) {
 }
 
 // Weekly battle inputs + points for one user.
-export function userWeekPoints(profile, sessions, bodyweight, calories, weekStart) {
+export function userWeekPoints(profile, sessions, bodyweight, weekStart) {
   const mySessions = byUser(sessions, profile.id).filter((s) => inWeek(s.date, weekStart))
   // PRs this week: exercises whose best est-1RM happened this week AND
   // beat the pre-week best.
@@ -108,7 +108,6 @@ export function userWeekPoints(profile, sessions, bodyweight, calories, weekStar
   const bwStart = bwBefore.length ? Number(bwBefore[0].weight_kg) : null
   const points = weekPoints({
     sessions: mySessions.map((s) => ({ ...s, prs })),
-    calorieDays: byUser(calories, profile.id),
     weekStart,
     bwStart, bwEnd,
     goal: profile.goal || 'maintain',

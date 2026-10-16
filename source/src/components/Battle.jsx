@@ -26,7 +26,7 @@ function EloCard({ profile, overall, streak, color, textOn, leader }) {
   )
 }
 
-export default function Battle({ profiles, sessions, bodyweight, calories, eloHistory, actions }) {
+export default function Battle({ profiles, sessions, bodyweight, eloHistory, actions }) {
   const [settling, setSettling] = useState(false)
   const [settleMsg, setSettleMsg] = useState('')
   const weekStart = thisWeekMonday()
@@ -35,9 +35,9 @@ export default function Battle({ profiles, sessions, bodyweight, calories, eloHi
   const stats = useMemo(() => profiles.map((p) => ({
     profile: p,
     overall: userOverall(sessions, bodyweight, p),
-    week: userWeekPoints(p, sessions, bodyweight, calories, weekStart),
+    week: userWeekPoints(p, sessions, bodyweight, weekStart),
     streak: currentStreak(byUser(sessions, p.id).map((s) => s.date), weekStart),
-  })), [profiles, sessions, bodyweight, calories, weekStart])
+  })), [profiles, sessions, bodyweight, weekStart])
 
   const [A, B] = stats
   const total = (A?.week.points || 0) + (B?.week.points || 0)

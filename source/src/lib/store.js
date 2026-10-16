@@ -25,22 +25,20 @@ function attachSets(sessions, sets) {
 }
 
 async function loadFromSupabase() {
-  const [p, s, st, bw, cal, elo] = await Promise.all([
+  const [p, s, st, bw, elo] = await Promise.all([
     supabase.from('profiles').select('*').order('created_at'),
     supabase.from('sessions').select('*').order('date', { ascending: false }),
     supabase.from('sets').select('*'),
     supabase.from('bodyweight_logs').select('*').order('date'),
-    supabase.from('calorie_logs').select('*').order('date'),
     supabase.from('elo_history').select('*').order('week_start'),
   ])
-  for (const r of [p, s, st, bw, cal, elo]) {
+  for (const r of [p, s, st, bw, elo]) {
     if (r.error) throw new Error(r.error.message)
   }
   return {
     profiles: p.data,
     sessions: attachSets(s.data, st.data),
     bodyweight: bw.data,
-    calories: cal.data,
     eloHistory: elo.data,
   }
 }
@@ -72,7 +70,7 @@ function detectPRs(newExercises, existingSessions, userId) {
 export function useGymData() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [data, setData] = useState({ profiles: [], sessions: [], bodyweight: [], calories: [], eloHistory: [] })
+  const [data, setData] = useState({ profiles: [], sessions: [], bodyweight: [], eloHistory: [] })
   const dataRef = useRef(data)
   dataRef.current = data
 
@@ -99,7 +97,6 @@ export function useGymData() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'sessions' }, reload)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'sets' }, reload)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'bodyweight_logs' }, reload)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'calorie_logs' }, reload)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, reload)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'elo_history' }, reload)
       .subscribe()
@@ -109,11 +106,11 @@ export function useGymData() {
   // ---- actions ----
 
   const setupProfiles = useCallback(async (people) => {
-    // people: [{ name, goal, goal_weight, start_weight, calorie_target }]
+    // people: [{ name, goal, goal_weight, start_weight }]
     if (DATA_MODE === 'supabase') {
       const rows = people.map((p) => ({
         name: p.name, elo: 1200, goal: p.goal,
-        goal_weight: p.goal_weight || null, calorie_target: p.calorie_target || null,
+        goal_weight: p.goal_weight || null,
         start_weight: p.start_weight || null,
       }))
       const { data: inserted, error } = await supabase.from('profiles').insert(rows).select()
@@ -193,28 +190,12 @@ export function useGymData() {
     })
   }, [reload])
 
-  const logCalories = useCallback(async (userId, date, calories) => {
-    if (DATA_MODE === 'supabase') {
-      const profile = dataRef.current.profiles.find((p) => p.id === userId)
-      const { error } = await supabase.from('calorie_logs')
-        .upsert({ user_id: userId, date, calories: Number(calories), target: profile?.calorie_target || 0 }, { onConflict: 'user_id,date' })
-      if (error) throw new Error(error.message)
-      await reload()
-      return
-    }
-    setData((d) => {
-      const rest = d.calories.filter((r) => !(r.user_id === userId && r.date === date))
-      const profile = d.profiles.find((p) => p.id === userId)
-      return { ...d, calories: [...rest, { id: uid(), user_id: userId, date, calories: Number(calories), target: profile?.calorie_target || 0 }] }
-    })
-  }, [reload])
-
   const settleWeek = useCallback(async (weekStart) => {
     const d = dataRef.current
     if (d.profiles.length !== 2) throw new Error('Need exactly 2 profiles to settle a week')
     const [a, b] = d.profiles
-    const pa = userWeekPoints(a, d.sessions, d.bodyweight, d.calories, weekStart)
-    const pb = userWeekPoints(b, d.sessions, d.bodyweight, d.calories, weekStart)
+    const pa = userWeekPoints(a, d.sessions, d.bodyweight, weekStart)
+    const pb = userWeekPoints(b, d.sessions, d.bodyweight, weekStart)
     let scoreA = 0.5
     if (pa.points > pb.points) scoreA = 1
     else if (pb.points > pa.points) scoreA = 0
@@ -244,7 +225,7 @@ export function useGymData() {
   return {
     mode: DATA_MODE, loading, error,
     profiles: data.profiles, sessions: data.sessions,
-    bodyweight: data.bodyweight, calories: data.calories, eloHistory: data.eloHistory,
-    actions: { setupProfiles, logSession, deleteSession, logBodyweight, logCalories, settleWeek, refresh: reload },
+    bodyweight: data.bodyweight, eloHistory: data.eloHistory,
+    actions: { setupProfiles, logSession, deleteSession, logBodyweight, settleWeek, refresh: reload },
   }
 }
