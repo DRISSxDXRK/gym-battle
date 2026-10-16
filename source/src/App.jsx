@@ -60,6 +60,14 @@ export default function App() {
     <>
       <header className="app-header">
         <h1>Gym <span className="vs">Battle</span></h1>
+        <nav className="top-nav">
+          {TABS.map((t) => (
+            <button key={t.id} className={tab === t.id ? 'active' : ''} onClick={() => { setTab(t.id); window.scrollTo(0, 0) }}>
+              <span className="ico">{t.ico}</span>
+              {t.label}
+            </button>
+          ))}
+        </nav>
         <div className="live-badge"><span className="dot" />{DATA_MODE === 'demo' ? 'demo' : 'live'}</div>
       </header>
       {DATA_MODE === 'demo' && (

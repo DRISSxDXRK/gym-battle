@@ -26,7 +26,7 @@ export default function Ranks({ profiles, sessions, bodyweight, eloHistory }) {
 
   return (
     <div className="view">
-      <Card title="Head to head" emoji="📊">
+      <Card title="Head to head" className="wide">
         <div className="stat-grid">
           <div className="stat-box">
             <div className="v" style={{ color: P_COLORS[0] }}>{h2h[0]?.weeksWon ?? 0} – {h2h[1]?.weeksWon ?? 0}</div>
@@ -47,7 +47,7 @@ export default function Ranks({ profiles, sessions, bodyweight, eloHistory }) {
         </div>
       </Card>
 
-      <Card title="ELO history" emoji="📈">
+      <Card title="ELO history" className="wide">
         <LineChart series={eloSeries} yLabel={(v) => `${Math.round(v)}`} />
         <div className="chart-legend">
           {profiles.map((p, i) => (
@@ -74,7 +74,7 @@ export default function Ranks({ profiles, sessions, bodyweight, eloHistory }) {
         </Card>
       ))}
 
-      <Card title="The ladder" emoji="🪜">
+      <Card title="The ladder" className="wide">
         {overalls.map((o) => (
           <div key={o.profile.id} style={{ marginBottom: 14 }}>
             <div style={{ fontWeight: 800, marginBottom: 6, color: P_COLORS[profiles.indexOf(o.profile) % 2] }}>

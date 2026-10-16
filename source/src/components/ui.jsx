@@ -9,9 +9,9 @@ export function TierBadge({ tier, rating }) {
   )
 }
 
-export function Card({ title, emoji, children, action }) {
+export function Card({ title, emoji, children, action, className = '' }) {
   return (
-    <div className="card">
+    <div className={'card ' + className}>
       <h3>
         <span>{title}</span>
         {action}

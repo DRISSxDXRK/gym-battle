@@ -113,7 +113,7 @@ export default function Battle({ profiles, sessions, bodyweight, calories, eloHi
 
       <div className="view">
         <div className="section-label"><span className="num">01</span> This week</div>
-        <Card title={`${fmtDate(start)} – ${fmtDate(end)}`}>
+        <Card title={`${fmtDate(start)} – ${fmtDate(end)}`} className="wide">
           <div className="battle-bar">
             <div className="labels">
               <span style={{ color: 'var(--olive)' }}>{A ? `${A.profile.name} · ${A.week.points}` : ''}</span>
