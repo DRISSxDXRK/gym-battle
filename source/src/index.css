@@ -362,7 +362,7 @@ a { color: var(--deep); }
 .top-nav { display: none; }
 
 @media (min-width: 900px) {
-  #root { max-width: 1120px; }
+  #root { max-width: none; }
   body { padding-bottom: 0; }
 
   .app-header { padding: 14px 28px 12px; }
@@ -386,7 +386,7 @@ a { color: var(--deep); }
   .elo-duel { max-width: 760px; margin: 0 auto; }
   .marquee { margin: 32px -40px 0; }
 
-  .view { padding: 28px 28px 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  .view { padding: 28px 28px 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; max-width: 1120px; margin: 0 auto; }
   .view > .section-label { grid-column: 1 / -1; margin-top: 10px; }
   .view > .card.wide { grid-column: 1 / -1; }
 
